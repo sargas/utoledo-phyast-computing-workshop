@@ -1,0 +1,144 @@
+\documentclass[xcolor={usenames,x11names}]{beamer}
+
+\usepackage{default}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{attrib}
+\usepackage{listings}
+
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+\title[What is UNIX?]{System Architecture}
+\author{Joseph Booker}
+\institute[UToledo]{Department of Physics and Astronomy \\ University of Toledo}
+
+\setbeamertemplate{section page}
+{%
+    \begin{centering}
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+    \end{centering}
+}
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Layout of Today}
+        \begin{itemize}
+                \item What is a compiled program?
+                \pause\item Communicating with hardware (aka: what is a kernel?)
+                \pause\item Other program attributes: who owns them?
+                \pause\item File permissions
+                \pause\item Structure of File System
+        \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{What is a Program?}
+ \begin{itemize}
+  \item Code which the computer understands
+  \pause\item In Linux/UNIX, program use the system to do the hard work.\begin{lstlisting}[language={[x86masm]Assembler},basicstyle=\tiny]
+.data
+msg: .ascii "Hello World\n"
+
+.text
+.global _start
+
+_start:
+movq $1, %rax   ; use the write syscall
+movq $1, %rdi   ; write to stdout
+movq $msg, %rsi ; use string "Hello World"
+movq $12, %rdx  ; write 12 characters
+syscall         ; make syscall
+
+movq $60, %rax  ; use the _exit syscall
+movq $0, %rdi   ; error code 0
+syscall         ; make syscall
+\end{lstlisting}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Overview of Kernel}\centering
+ \includegraphics[scale=0.55]{kernelovr-arch}
+\end{frame}
+
+\begin{frame}{More Properties of Linux/UNIX Programs: User-owned}\centering
+ \includegraphics[scale=0.5]{multiuse}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{UNIX Permissions}
+ \begin{itemize}
+  \item All files have have an ``owning'' user and group.
+  \pause\item Files can have Read, Write, and Execute permissions based on matching username or group.
+  \pause\item These permissions are meaningful for directories:\begin{itemize}
+                                                       \item Anyone with write permission can add/delete/rename files
+                                                       \item Anyone with read permission can list files
+                                                       \item Anyone with execute permission can \verb|cd| into this directory
+                                                      \end{itemize}
+ \end{itemize}
+\end{frame}
+
+\begin{frame}{Describing Permissions of a File --- ls -l listing}
+  \centering\includegraphics[width=\textwidth]{permissions_diagram.png}
+\end{frame}
+
+\begin{frame}{Setting permissions of a file --- chmod syntax}
+\begin{center}
+ \begin{tabular}{lr}
+  \toprule
+  \textbf{Permission} & \textbf{Code} \\
+  \midrule
+  Execute & 1 \\ \midrule
+  Write & 2 \\ \midrule
+  Read & 4 \\
+  \bottomrule
+ \end{tabular}
+\end{center}
+\begin{itemize}
+ \pause\item Example 1: Permission to read and write is $2+4 = 6$.
+ \pause\item Example 2: Permission to read and execute is $1 + 4 = 5$.
+ \pause\item Permissions are given as a three digit number for the owning user, group, and everyone else.\pause\ E.g., read/write permission for owner and read permission for everyone else would be $644$.
+\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+\frametitle{File System Structure}
+	\begin{tabular}{@{}ll@{}}
+		\pause\verb|/bin/|, \verb|/usr/bin/|, \verb|/sbin/|, \verb|/usr/sbin| & Programs\\
+		\midrule
+		\pause\verb|/Applications/| & Mac OS X graphical programs\\
+		\midrule
+		\pause\verb|/dev/| & Hardware Access\\
+		\midrule
+		\pause\verb|/etc/| & System-wide settings\\
+		\midrule
+		\pause\verb|/home/|, \verb|/Users/| & Home directories\\
+		\midrule
+		\pause\verb|/lib|, \verb|/lib64|, \verb|/usr/lib|, \verb|/Libraries| & Code used by programs\\
+		\midrule
+		\pause\verb|/tmp/| & Temporary storage for programs\\
+		\midrule
+		\pause\verb|/var/| & Permanent storage for programs\\
+		\midrule
+		\pause\verb|/usr/local/| & Third-party software\\
+		\midrule
+		\pause\verb|/usr/| & Originally for non-essential\\
+		&software\\
+		\bottomrule
+	\end{tabular}
+\end{frame}
+
+\begin{frame}{Further Resources}
+ \begin{itemize}
+  \item Interactive tool for understanding commands --- \url{http://explainshell.com/}
+  \item Software Carpentry Lesson --- \url{https://swcarpentry.github.io/shell-novice/}
+  \item Command Line Crash Course --- \url{http://cli.learncodethehardway.org/book/}
+ \end{itemize}
+\end{frame}
+ 
+\end{document}

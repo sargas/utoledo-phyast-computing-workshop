@@ -1,0 +1,209 @@
+\documentclass[10pt,letterpaper]{article}
+\usepackage{multicol}
+\usepackage{geometry}
+\usepackage{hyperref}
+\usepackage{xcolor}
+\usepackage{booktabs}
+\usepackage{listings}
+\hypersetup{%
+	colorlinks,
+    linkcolor={red!50!black},
+    citecolor={blue!50!black},
+    urlcolor={blue!80!black}
+}
+
+
+\geometry{top=.5in,left=.2in,right=.2in,bottom=.5in}
+
+% Turn off header and footer
+\pagestyle{empty}
+% Redefine section commands to use less space
+\makeatletter
+\renewcommand{\section}{\@startsection{section}{1}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%x
+                                {\normalfont\large\bfseries}}
+\renewcommand{\subsection}{\@startsection{subsection}{2}{0mm}%
+                                {-1explus -.5ex minus -.2ex}%
+                                {0.5ex plus .2ex}%
+                                {\normalfont\normalsize\bfseries}}
+\renewcommand{\subsubsection}{\@startsection{subsubsection}{3}{0mm}%
+                                {-1ex plus -.5ex minus -.2ex}%
+                                {1ex plus .2ex}%
+                                {\normalfont\small\bfseries}}
+\makeatother
+% Don't print section numbers
+\setcounter{secnumdepth}{0}
+\setlength{\parindent}{0pt}
+\setlength{\parskip}{2pt plus 0.5ex}
+\begin{document}
+\raggedright
+\footnotesize
+\begin{multicols}{2}
+
+% multicol parameters
+% These lengths are set only within the two main columns
+%\setlength{\columnseprule}{0.25pt}
+\setlength{\premulticols}{1pt}
+\setlength{\postmulticols}{1pt}
+\setlength{\multicolsep}{1pt}
+\setlength{\columnsep}{2pt}
+
+\begin{center}
+     \Large{\textbf{Linux/UNIX Shell Cheat Sheet}} \\
+\end{center}
+
+
+\section{Shells}
+\begin{tabular}{@{}ll@{}}
+\verb!Bourne Shell (sh)! & Standard UNIX shell. Not used.\\
+\verb!C Shell (csh)! & Influential shell in interactive use. Not used.\\
+\verb!Bourne-Again Shell (bash)! & A massively improved version of \verb|sh|.\\
+\verb!tcsh! & Improved version of csh.\\
+\verb!Korn Shell (ksh)! & Compatible with \verb!sh!, adding \verb!csh! features.\\
+\verb!Z Shell (zsh)! & Feature-packed shell, most similiar to \verb!ksh!.\\
+\verb!ash! and \verb!dash! & Minimalistic shells compatible with \verb!sh!.\\
+\verb!fish! & A ``friendly'' shell, focused on interactive use.\\
+\end{tabular}
+
+\verb!bash! is by far the most prominant. Virtually every UNIX system has a Bourne-compatible shell (\verb!bash!, \verb!ksh!, \verb!ash!, or \verb!dash!).
+
+\section{Input/Output (I/O) Redirection}
+Every ``file'' opened by a program is assigned a number, called a file descriptor (FD). This includes the keyboard and console. The three file descriptors used in every UNIX program are:
+\begin{tabular}{@{}llr@{}}
+	\toprule
+	FD & Name & Normally Connected With\\
+	0 & Standard Input & Keyboard\\
+	1 & Standard Output & Screen\\
+	2 & Standard Error & Screen\\
+	\bottomrule
+\end{tabular}
+
+
+\subsection{Bash/Bourne Shell I/O}
+\begin{tabular}{@{}ll@{}}
+	\textit{command} \verb!>!\textit{file} & Redirect standard output to \textit{file} instead of screen.\\
+	\textit{command} \verb!>>!\textit{file} & Append standard output to \textit{file}.\\
+	\textit{command} \verb!<!\textit{file} & Use \textit{file} for standard input instead of the keyboard.\\
+	\textit{command} \textit{num}\verb!>!\textit{file} & Redirect file descriptor to a \textit{file}.\\
+	\textit{command} \textit{num}\verb!>>!\textit{file} & Redirect file descriptor to the end of \textit{file}.\\
+	\textit{command} \textit{num1}\verb!>&!\textit{num2} & Redirect FD \textit{num1} to FD \textit{num2}.\\
+	\textit{command} \verb!2>&1 >!\textit{file} & Redirect standard error and output to \textit{file}.
+\end{tabular}
+
+\subsection{C Shell I/O}
+\begin{tabular}{@{}ll@{}}
+	\textit{command} \verb!>!\textit{file} & Redirect standard output to \textit{file} instead of screen.\\
+	\textit{command} \verb!>>!\textit{file} & Append standard output to \textit{file}.\\
+	\textit{command} \verb!<!\textit{file} & Use \textit{file} for standard input instead of the keyboard.\\
+	\textit{command} \verb!>& !\textit{file} & Redirect standard error and output to \textit{file}.
+\end{tabular}
+
+\subsection{Redirection of Program I/O}
+\begin{tabular}{@{}ll@{}}
+	\textit{command1} \verb!|! \textit{command2} & Redirect standard output of \textit{command1} to\\
+	& standard input of \textit{command2}.\\
+\end{tabular}
+
+This is a powerful technique that deserves some examples:
+\begin{tabular}{@{}ll@{}}
+	\verb!ps aux | less! & View a potentially long output through \verb!less!.\\
+	\verb!ls -lt|head! & Use the \verb!head! program to display the first ten lines.\\
+	\verb!export | grep -i ssh! & Use \verb!grep! to search through a command's output.\\
+\end{tabular}
+
+\section{Environmental Variables}
+All programs in Linux/UNIX are loaded with a set of named data called the environment. Some programs use this to modify their behavior. By convention, the names are capitalized.
+
+\subsection{Manipulating Variables in Bash}
+\begin{tabular}{@{}ll@{}}
+	\verb!export! & List environmental variables.\\
+	\verb!export !\textit{VARNAME}\verb!=!\textit{value} & Set \textit{VARNAME} to \textit{value}.\\
+\end{tabular}
+
+\subsection{Manipulating Variables in C Shell}
+\begin{tabular}{@{}ll@{}}
+	\verb!setenv! & List environmental variables.\\
+	\verb!setenv !\textit{VARNAME}\verb! !\textit{value} & Set \textit{VARNAME} to \textit{value}.\\
+\end{tabular}
+
+\subsection{Using Variables in Bash / C Shell}
+\begin{tabular}{@{}ll@{}}
+	\ldots \verb!$!\textit{VARNAME} \ldots & Run the command with the value of \textit{VARNAME}.\\
+	\verb!echo $!\textit{VARNAME} & Example of above, prints the value of \textit{VARNAME}.\\
+\end{tabular}
+
+\subsection{Useful Variables}
+\begin{tabular}{@{}ll@{}}
+	\verb!PATH! & Colon-seperated list of locations for commands.\\
+	\verb!PAGER! & Program used to display long files (e.g., by \verb!man!).\\
+	\verb!EDITOR! & Program used to edit files, (e.g., by \verb!ipython!).\\
+	\verb!HOME! & The path to the home directory.\\
+	\verb!DISPLAY! & Where to access an X Server (used for graphical programs.)\\
+\end{tabular}
+
+\section{Aliases}
+\begin{tabular}{@{}ll@{}}
+	\verb!alias !\textit{newalias}\verb!=``!\textit{commands \ldots}\verb!''! & Set an alias in Bash.\\
+	\verb!alias !\textit{newalias}\verb! !\textit{commands \ldots} & Set an alias in C Shell.\\
+\end{tabular}
+
+Aliases can be created with the names of existing commands, or new ones. For example (in bash):
+\begin{tabular}{@{}ll@{}}
+	\verb!alias rm='rm -iv'! & Always confirm before removing files.\\
+	\verb!alias ls='ls -G'! & Make \verb!ls! colorful (on BSD systems).\\
+	\verb!alias cup-holder='eject /dev/cdrom'! & Provide yourself a little humor.\\
+	\verb!alias rsys='rsync -avuz --de!\ldots\verb!'! & Shorten long commands.\\
+\end{tabular}
+
+\section{Startup Files}
+These files contain places to put aliases and environmental variables, as well as any other code you'd like run at startup.
+
+Two distinctions need to be made: login shells are run once you login, as opposed to ones run afterwards (e.g., running \verb!bash! after logging in). Interactive shells are those you run commands with, as opposed to ones that are run from scripts.
+
+While Linux terminals run in graphical systems are considered non-login, interactive shells; Mac OS X's Terminal.app runs as an interactive login shell.
+
+\subsection{Bash Startup}
+If a login shell, \path{~/.bash_profile}, \path{~/.bash_login}, and \path{~/.login} are check. The first one to exist is loaded.
+
+If an interactive non-login shell, \path{~/.bashrc} is loaded if it exists.
+
+See \url{http://wiki.bash-hackers.org/scripting/bashbehaviour#quick_startup_file_reference} for more information.
+
+\subsubsection{Simplified Bash Startup}
+Many Linux distributions take the approach recommended in the Bash documention of just using \path{~/.bashrc} for all interactive use. To do this, put the following in \path{~/.bash_profile}:
+\begin{lstlisting}[language=bash]
+if [ -f ~/.bashrc ];
+	then . ~/.bashrc;
+fi
+\end{lstlisting}
+
+\subsection{C Shell Starup}
+\path{~/.tschrc} and \path{~/.cshrc} are checked, and the first one that exists is loaded.
+
+\path{~/.login} is also loaded for login shells.
+
+
+\section{Wildcards}
+\begin{tabular}{@{}ll@{}}
+	\ldots \verb: * : \ldots & Replace \verb|*| with all files in current directory.\\
+	\ldots \verb: *.c : \ldots & Complete part of filename: replace with files ending in \verb|.c|.\\
+	\ldots \verb: ? : \ldots & Replace \verb|*| with all files in current directory.\\
+\end{tabular}
+
+
+\section{Recalling History}
+\begin{tabular}{@{}ll@{}}
+	\verb|Up Arrow| & Go through previous commands\\
+	\ldots \verb:!!: \ldots & Replace \verb:!!: with entire last command\\
+\end{tabular}
+
+\rule{0.3\linewidth}{0.25pt}
+\scriptsize
+
+Copyright \copyright\ 2014 Winston Chang and 2015 by Joseph Jon Booker
+
+Modified from \url{https://wch.github.io/latexsheet/}
+
+\end{multicols}
+\end{document}

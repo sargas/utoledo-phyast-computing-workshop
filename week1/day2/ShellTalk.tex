@@ -1,0 +1,104 @@
+\documentclass[xcolor={usenames,x11names}]{beamer}
+
+\usepackage{default}
+\usepackage{lmodern}
+\usepackage{booktabs}
+\usepackage{attrib}
+\usepackage{listings}
+
+
+\usetheme{Boadilla}
+\usecolortheme{whale}
+
+\title[Linux/UNIX Shell]{Making the Linux/UNIX Shell Productive}
+\author{Joseph Booker}
+\institute[UToledo]{Department of Physics and Astronomy \\ University of Toledo}
+
+\setbeamertemplate{section page}
+{%
+    \begin{centering}
+    \begin{beamercolorbox}[sep=12pt,center]{part title}
+    \usebeamerfont{section title}\insertsection\par
+    \end{beamercolorbox}
+    \end{centering}
+}
+
+
+\begin{document}
+
+\frame{\titlepage}
+
+\begin{frame}{Layout of Today}
+	\begin{itemize}
+		\item Overview of different shells used in academia
+		\item Manipulating I/O (pipes and redirections)
+		\item Environmental Variables
+		\item Creating aliases
+		\item Startup files
+		\item Useful tricks: Wildcards, History
+	\end{itemize}
+\end{frame}
+
+\section{Overview of Shells}
+\frame{\sectionpage}
+
+\begin{frame}{History of the Shell(s)}
+	\centering
+	\begin{tabular}{l||l|r}
+		\toprule
+		Late 1970s & Bourne Shell (sh) & C Shell (csh) \\
+		\midrule
+		\pause Early 1980s & Korn Shell (ksh) & \alert<5>{tcsh} \\
+		\midrule
+		\pause Late 1980s & \alert<5>{Bourne-Again Shell (bash)} & \\
+		\midrule
+		\pause Newer & Z Shell, ash, dash, fish& \\
+		\bottomrule
+	\end{tabular}
+\end{frame}
+
+\begin{frame}{C Shell Considered Harmful}
+	\begin{itemize}
+		\item Somewhat C-like, but with an ad hoc parser that makes programming difficult
+		\pause\item Confusing quoting rules --- especially if multi-line or using special symbols
+		\pause\item Limited manipulation of input/output
+	\end{itemize}
+	\pause\begin{quote}
+		When I started doing this stuff with Unix, I wasn't a very good programmer.
+		\attrib{Bill Joy on the ad hoc parser (2009)}
+	\end{quote}
+\end{frame}
+
+\section{Startup Files}
+\frame{\sectionpage}
+
+\begin{frame}{Ways to start a shell}
+	\begin{description}
+		\pause\item[Interactively] Are you running the shell, or is a script?
+		\pause\item[Login shell] Is this the first shell you started when logging in?
+	\end{description}
+\end{frame}
+
+\begin{frame}{A Sane Way to Start Shells (tcsh)}
+	\begin{description}
+		\pause\item[All Shells] reads \path{~/.tcshrc} if it exists, else \path{~/.cshrc}
+		\pause\item[Login Shells] reads \path{~/.login} if it exists
+	\end{description}
+\end{frame}
+
+\begin{frame}{A Fine-tuned Way to Run Shells}
+	\begin{description}
+		\pause\item[Login Shells] checks for \path{~/.bash_profile}, \path{~/.bash_login}, and \path{~/.profile}: Loads the first one which exists.
+		\pause\item[Interactive, Non-Login Shells] reads \path{~/.bashrc} if it exists
+	\end{description}
+\end{frame}
+
+\begin{frame}[fragile]{Simplify life by always using \path{~/.bashrc}}
+	\begin{lstlisting}[language=bash, caption={Put this in \textasciitilde/.bash\_profile}]
+	if [ -f ~/.bashrc ];
+		then . ~/.bashrc;
+	fi
+	\end{lstlisting}
+\end{frame}
+
+\end{document}
