@@ -1,0 +1,3 @@
+[submodule "week2/git-novice"]
+	path = week2/git-novice
+	url = git@github.com:sargas/2015-06-16-utoledo.git
