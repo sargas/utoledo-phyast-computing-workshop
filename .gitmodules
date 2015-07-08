@@ -2,5 +2,5 @@
 	path = week2/git-novice
 	url = https://github.com/sargas/2015-06-16-utoledo.git
 [submodule "week3/scientific-python-walkabout"]
-	path = week3/scientific-python-walkabout
+	path = week4/scientific-python-walkabout
 	url = https://github.com/terencezl/scientific-python-walkabout.git
